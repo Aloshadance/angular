@@ -1,0 +1,19 @@
+:host{
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  min-width: 1200px;
+}
+.right-field {
+  flex-grow: 2;
+  padding: 10px;
+}
+.left-field {
+  flex-grow: 1;
+  padding: 10px;
+}
+.main-field {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}

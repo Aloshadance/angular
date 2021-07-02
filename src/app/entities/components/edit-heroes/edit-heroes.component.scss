@@ -1,0 +1,29 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: flex-start;
+}
+.field {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+}
+.button-field {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+.field-header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.field-header-title {
+  margin: 0;
+}
+.field-header-icon {
+  cursor: pointer;
+}

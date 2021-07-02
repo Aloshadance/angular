@@ -1,0 +1,39 @@
+<form class="filter-heroes" [formGroup]="filterHeroesForm" (input)="filterHeroes()">
+  <div class="field-row">
+    <div class="field">
+      Уровень героя:
+      <mat-label> от </mat-label>
+      <mat-form-field appearance="outline" class="filter-heroes-level">
+        <input matInput type="number" class="form-control" min="1" formControlName="fromLevel">
+      </mat-form-field>
+      <mat-label> до </mat-label>
+      <mat-form-field appearance="outline" class="filter-heroes-level">
+        <input matInput type="number" class="form-control" min="1" formControlName="toLevel">
+      </mat-form-field>
+    </div>
+
+    <div class="field">
+      Способности:
+      <mat-form-field appearance="outline">
+        <mat-select multiple formControlName="skill">
+          <mat-option *ngFor="let skill of skills">{{skill.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="field-row">
+    <div class="field">
+      Поиск по имени:
+      <mat-form-field appearance="outline">
+        <input matInput type="text" class="form-control" formControlName="name">
+      </mat-form-field>
+    </div>
+
+    <div class="field">
+      Сортировать по возрастанию уровня:
+      <input type="checkbox" class="form-control" formControlName="sortLevel">
+    </div>
+  </div>
+
+</form>

@@ -1,0 +1,44 @@
+.heroes-list {
+  width: 100%;
+  background-color: azure;
+  margin-top: 10px;
+  overflow-y: auto;
+}
+.mat-card {
+  display: inline-block;
+  margin: 5px;
+}
+.mat-expansion-panel {
+  margin: 10px;
+}
+.field-hero {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 5px;
+}
+.button-field {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 10px 10px 10px;
+}
+.mat-expansion-panel-header-description {
+  flex-grow: 0.2;
+}
+.field:last-child {
+  padding: 0 10px;
+}
+.field-skill {
+  display: flex;
+  flex-direction: row;
+}
+.all-heroes {
+  height: 400px;
+}
+.button-field {
+  margin-top: 10px;
+}
+.field-power {
+  margin-bottom: 5px;
+}
+

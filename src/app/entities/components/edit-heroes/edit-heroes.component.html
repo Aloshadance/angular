@@ -1,0 +1,40 @@
+<div class="field-header">
+  <div mat-dialog-title class="field-header-title">Редактировать героя</div>
+  <mat-icon aria-hidden="false" mat-dialog-close class="field-header-icon">close</mat-icon>
+</div>
+
+<div mat-dialog-content>
+  <form class="edit-heroes" [formGroup]="editHeroForm">
+  <div class="field">
+    <mat-label>Имя:</mat-label>
+    <mat-form-field appearance="outline">
+      <input matInput type="text" class="form-control" formControlName="name"/>
+    </mat-form-field>
+  </div>
+
+  <div class="field">
+    <mat-label>Сила:</mat-label>
+    <mat-form-field appearance="outline">
+      <input matInput type="number" min="1" class="form-control" formControlName="power"/>
+    </mat-form-field>
+  </div>
+
+  <div class="field">
+    <mat-label>Способности:</mat-label>
+    <mat-form-field appearance="outline">
+      <mat-select formControlName="skill" multiple>
+        <mat-option *ngFor="let skill of skills">{{skill.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="field">
+    <mat-label>Начальный уровень:</mat-label>
+  </div>
+
+  <div class="button-field">
+    <button mat-flat-button color="primary" mat-dialog-close (click)="updateHero()">Сохранить изменения</button>
+  </div>
+  </form>
+</div>
+

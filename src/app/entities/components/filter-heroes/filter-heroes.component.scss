@@ -1,0 +1,26 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: flex-start;
+}
+.field-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+}
+.field:last-child {
+  padding: 0 10px;
+}
+.filter-heroes {
+  width: 100%;
+  background-color: azure;
+}
+.example-margin {
+  margin: 0 10px;
+}
+.filter-heroes-level {
+  width: 100px;
+}

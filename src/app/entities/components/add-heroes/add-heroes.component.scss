@@ -1,0 +1,25 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: flex-start;
+}
+.field {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+}
+.field:last-child {
+  padding: 0 10px;
+}
+.button-field {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 10px 10px 10px;
+}
+.add-heroes {
+  width: 100%;
+  background-color: azure;
+}
