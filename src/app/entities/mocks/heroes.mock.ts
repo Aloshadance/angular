@@ -4,10 +4,11 @@ export const Heroes: Hero[] = [
   {
     name: 'Лучник',
     power: 1,
-    skill: [{
+    skill: [
+      {
       id: 1,
       name: 'Меткий'
-    }],
+      }],
     level: 10,
     id: 1
   },

@@ -22,9 +22,10 @@ export class HeroesListComponent implements OnInit {
 
   public getHeroes(): void {
     this._service.getHeroes();
-    this._service.heroes$.subscribe((items: Hero[]) => {
+    this._service.filteredHeroes$.subscribe((items: Hero[]) => {
       this.heroes = items;
     })
+    console.log(this.heroes);
   }
 
   public getSkills(): void {
@@ -34,8 +35,8 @@ export class HeroesListComponent implements OnInit {
     })
   }
 
-  public openDialog(hero: Hero): void {
-   this._service.openDialog(hero);
+  public setSelectedHero(hero: Hero): void {
+   this._service.setSelectedHero(hero);
   }
 
 }

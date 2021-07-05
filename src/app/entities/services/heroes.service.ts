@@ -6,6 +6,7 @@ import {Heroes} from "../mocks/heroes.mock";
 import {Skills} from "../mocks/skills.mock";
 import {EditHeroesComponent} from "../components/edit-heroes/edit-heroes.component";
 import {MatDialog} from "@angular/material/dialog";
+import {FilterData} from "../interfaces/filter-data";
 
 @Injectable({
   providedIn: 'root'
@@ -13,11 +14,16 @@ import {MatDialog} from "@angular/material/dialog";
 export class HeroesService {
   public heroes: Hero[] = [];
   public skills: IdName[] = [];
+  public foundIdHero: number = 0;
+  public filteredHeroes: Hero[] = [];
 
   private defaultHero = {id: 0, name: '', skill: [], power: 0, level: 0};
 
   private _heroes$$: BehaviorSubject<Hero[]> = new BehaviorSubject<Hero[]>(Heroes);
   public heroes$: Observable<Hero[]> = this._heroes$$.asObservable();
+
+  private _filteredHeroes$$: BehaviorSubject<Hero[]> = new BehaviorSubject<Hero[]>(Heroes);
+  public filteredHeroes$: Observable<Hero[]> = this._filteredHeroes$$.asObservable();
 
   private _selectedHero$$: BehaviorSubject<Hero> = new BehaviorSubject<Hero>(this.defaultHero);
   public selectedHero$: Observable<Hero> = this._selectedHero$$.asObservable();
@@ -31,6 +37,10 @@ export class HeroesService {
     this.heroes$.subscribe((items: Hero[]) => {
       this.heroes = items;
     })
+    this.filteredHeroes = this.heroes.slice();
+    // this.filteredHeroes$.subscribe((items: Hero[]) => {
+    //   this.filteredHeroes = items;
+    // })
   }
 
   public getSkills(): void {
@@ -43,15 +53,12 @@ export class HeroesService {
     return variable.length + 1;
   }
 
-  public getHero(id: number): void {
-
-  }
-
   public addHero(hero: Hero): void {
     this._heroes$$.subscribe((items: Hero[]) => {
       hero.id = this.genId(this.heroes);
       this.heroes.push(hero);
     })
+    this.filteredHeroes = this.heroes.slice();
   }
 
   public addSkill(skill: IdName): void {
@@ -61,17 +68,38 @@ export class HeroesService {
     });
   }
 
-  // public updateHero(array: Hero[]): void {
-  //   this._heroes$$.next(array);
-  // }
+  public updateHero(hero: Hero): void {
+    this._selectedHero$$.next(hero);
+    this._heroes$$.subscribe((items: IdName[]) => {
+      this.heroes.splice(this.foundIdHero - 1, 1, hero);
+    });
+    this.filteredHeroes.splice(this.foundIdHero - 1, 1, hero);
+  }
 
-  // public setSelectedHero(hero: Hero): Hero {
-  //   return this.heroes.find(item => item.id === hero.id);
-  // }
-
-  public openDialog(hero: Hero): void {
+  public setSelectedHero(hero: Hero): void {
+    this._selectedHero$$.next(hero);
+    this.foundIdHero = hero.id;
     this.dialog.open(EditHeroesComponent);
-    // this.setSelectedHero(hero);
   }
 
+  public filterHeroes(variable: FilterData): void {
+     this.filteredHeroes = this.heroes.filter(item =>
+      (!variable.fromLevel || item.level >= variable.fromLevel)
+       && (!variable.toLevel || item.level <= variable.toLevel)
+       && (!variable.name
+        || item.name.toLowerCase().indexOf(variable.name.toLowerCase()) > -1
+        || item.name.toUpperCase().indexOf(variable.name.toUpperCase()) > -1)
+    );
+    this._filteredHeroes$$.next(this.filteredHeroes);
   }
+
+  // public sortHeroes(variable: FilterData): boolean {
+  //   if (variable.sortLevel) {
+  //     this.heroes.sort((a, b) => a.level - b.level);
+  //     return true;
+  //   } else {
+  //     this.heroes.sort((a,b) => b.level - a.level);
+  //     return false;
+  //   }
+  // }
+}

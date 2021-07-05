@@ -3,7 +3,7 @@ export enum HeroesDetailEnum {
   LEVEL = 'level',
   POWER = 'power',
   SKILL = 'skill',
-  FROMLEVEL = 'fromLevel',
-  TOLEVEL = 'toLevel',
-  SORTLEVEL = 'sortLevel'
+  FROM_LEVEL = 'fromLevel',
+  TO_LEVEL = 'toLevel',
+  SORT_LEVEL = 'sortLevel'
 }

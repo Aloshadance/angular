@@ -11,19 +11,21 @@ import {HeroesDetailEnum} from "../../enums/heroes-detail.enum";
   styleUrls: ['./edit-heroes.component.scss']
 })
 export class EditHeroesComponent implements OnInit {
-  public hero: Hero | undefined;
+  public hero: Hero = {id: 0, skill: [], name: '', level: 0, power: 0};
   public skills: IdName[] = [];
 
   constructor(private _service: HeroesService) {}
-
+  public HERO_ENUM: typeof HeroesDetailEnum = HeroesDetailEnum;
   public editHeroForm: FormGroup = new FormGroup( {
-    [HeroesDetailEnum.NAME]: new FormControl('',Validators.required),
-    [HeroesDetailEnum.POWER]: new FormControl(1, Validators.required),
-    [HeroesDetailEnum.SKILL]: new FormControl([], Validators.required)
+    [HeroesDetailEnum.NAME]: new FormControl(),
+    [HeroesDetailEnum.POWER]: new FormControl(),
+    [HeroesDetailEnum.SKILL]: new FormControl(),
+    [HeroesDetailEnum.LEVEL]: new FormControl()
   });
 
   ngOnInit(): void {
     this.getSkills();
+    this.getHero();
   }
 
   public getSkills(): void {
@@ -33,12 +35,17 @@ export class EditHeroesComponent implements OnInit {
     })
   }
 
+  public getHero(): void {
+    this._service.selectedHero$.subscribe((item: Hero) => {
+      this.hero = item;
+      this.editHeroForm.patchValue(this.hero);
+    });
+  }
+
   public updateHero(): void {
-    // this._service.setSelectedHero();
-    // this._service.selectedHero$.subscribe((item: Hero) => {
-    //   console.log(item);
-    //   this.hero = item;
-    // })
+    this.hero = this.editHeroForm.value;
+    this.hero.id = this._service.foundIdHero;
+    this._service.updateHero(this.hero);
   }
 }
 

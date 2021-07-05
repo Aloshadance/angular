@@ -6,11 +6,12 @@
 }
 .right-field {
   flex-grow: 2;
-  padding: 10px;
+  padding: 20px;
 }
 .left-field {
+  min-width: calc(100%/3);
   flex-grow: 1;
-  padding: 10px;
+  padding: 20px;
 }
 .main-field {
   display: flex;

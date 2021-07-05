@@ -1,9 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Hero} from '../../interfaces/hero';
 import {HeroesService} from "../../services/heroes.service";
-import { FormGroup } from "@angular/forms";
-import { FormControl } from "@angular/forms";
-import {Validators} from "@angular/forms";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {IdName} from "../../interfaces/id-name.interface";
 import {HeroesDetailEnum} from "../../enums/heroes-detail.enum";
 
@@ -18,16 +16,17 @@ export class AddHeroesComponent implements OnInit {
 
   constructor(private _service: HeroesService) {}
 
-  public myForm: FormGroup = new FormGroup({
-    [HeroesDetailEnum.NAME]: new FormControl("Герой", Validators.required),
-    [HeroesDetailEnum.POWER]: new FormControl(1, Validators.required),
+  public HERO_ENUM: typeof HeroesDetailEnum = HeroesDetailEnum;
+  public addHeroForm: FormGroup = new FormGroup({
+    [HeroesDetailEnum.NAME]: new FormControl("Разведчик", Validators.required),
+    [HeroesDetailEnum.POWER]: new FormControl(1, [Validators.required,Validators.min(1)]),
     [HeroesDetailEnum.SKILL]: new FormControl([], Validators.required),
-    [HeroesDetailEnum.LEVEL]: new FormControl(1, Validators.required)
+    [HeroesDetailEnum.LEVEL]: new FormControl(1,[Validators.max(100), Validators.min(1),
+      Validators.required])
   });
 
   ngOnInit(): void {
     this.getSkills();
-    this.myForm.valueChanges.subscribe((value) => console.log(value));
   }
 
   public getSkills(): void {
@@ -38,8 +37,8 @@ export class AddHeroesComponent implements OnInit {
   }
 
   public addHero(): void {
-    if (this.myForm.valid) {
-      this._service.addHero(this.myForm.value);
+    if (this.addHeroForm.valid) {
+      this._service.addHero(this.addHeroForm.value);
     } else {
       alert('Заполните все поля создания героя!')
     }
