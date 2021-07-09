@@ -24,10 +24,9 @@ export class AddSkillsComponent implements OnInit {
   }
 
   public getSkills(): void {
-    this._service.getSkills();
     this._service.skills$.subscribe((items: IdName[]) => {
       this.skills = items;
-    })
+    });
   }
 
   public addSkill(): void {

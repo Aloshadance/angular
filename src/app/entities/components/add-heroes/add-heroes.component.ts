@@ -30,10 +30,9 @@ export class AddHeroesComponent implements OnInit {
   }
 
   public getSkills(): void {
-    this._service.getSkills();
     this._service.skills$.subscribe((items: IdName[]) => {
       this.skills = items;
-    })
+    });
   }
 
   public addHero(): void {
@@ -43,4 +42,5 @@ export class AddHeroesComponent implements OnInit {
       alert('Заполните все поля создания героя!')
     }
   }
+
 }

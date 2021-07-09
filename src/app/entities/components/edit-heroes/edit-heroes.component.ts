@@ -19,7 +19,7 @@ export class EditHeroesComponent implements OnInit {
   public editHeroForm: FormGroup = new FormGroup( {
     [HeroesDetailEnum.NAME]: new FormControl(),
     [HeroesDetailEnum.POWER]: new FormControl(),
-    [HeroesDetailEnum.SKILL]: new FormControl(),
+    [HeroesDetailEnum.SKILL]: new FormControl([]),
     [HeroesDetailEnum.LEVEL]: new FormControl()
   });
 
@@ -29,7 +29,6 @@ export class EditHeroesComponent implements OnInit {
   }
 
   public getSkills(): void {
-    this._service.getSkills();
     this._service.skills$.subscribe((items: IdName[]) => {
       this.skills = items;
     })
@@ -38,13 +37,15 @@ export class EditHeroesComponent implements OnInit {
   public getHero(): void {
     this._service.selectedHero$.subscribe((item: Hero) => {
       this.hero = item;
-      this.editHeroForm.patchValue(this.hero);
     });
+    this.editHeroForm.patchValue(this.hero);
   }
 
   public updateHero(): void {
     this.hero = this.editHeroForm.value;
-    this.hero.id = this._service.foundIdHero;
+    this._service.foundHeroId$.subscribe((item: number) => {
+      this.hero.id = item;
+    });
     this._service.updateHero(this.hero);
   }
 }

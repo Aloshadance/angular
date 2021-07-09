@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Hero } from "../interfaces/hero";
 import { BehaviorSubject, Observable } from "rxjs";
 import { IdName } from "../interfaces/id-name.interface";
-import {Heroes} from "../mocks/heroes.mock";
 import {Skills} from "../mocks/skills.mock";
 import {EditHeroesComponent} from "../components/edit-heroes/edit-heroes.component";
 import {MatDialog} from "@angular/material/dialog";
@@ -12,17 +11,16 @@ import {FilterData} from "../interfaces/filter-data";
   providedIn: 'root'
 })
 export class HeroesService {
-  public heroes: Hero[] = [];
-  public skills: IdName[] = [];
-  public foundIdHero: number = 0;
-  public filteredHeroes: Hero[] = [];
+
+  private _foundHeroId$$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  public foundHeroId$: Observable<number> = this._foundHeroId$$.asObservable();
 
   private defaultHero = {id: 0, name: '', skill: [], power: 0, level: 0};
+  private defaultFilter = {name: '', fromLevel: 0, toLevel: 0, sortLevel: false, skill: []}
 
-  private _heroes$$: BehaviorSubject<Hero[]> = new BehaviorSubject<Hero[]>(Heroes);
-  public heroes$: Observable<Hero[]> = this._heroes$$.asObservable();
+  private _heroes$$: BehaviorSubject<Hero[]> = new BehaviorSubject<Hero[]>([]);
 
-  private _filteredHeroes$$: BehaviorSubject<Hero[]> = new BehaviorSubject<Hero[]>(Heroes);
+  private _filteredHeroes$$: BehaviorSubject<Hero[]> = new BehaviorSubject<Hero[]>([]);
   public filteredHeroes$: Observable<Hero[]> = this._filteredHeroes$$.asObservable();
 
   private _selectedHero$$: BehaviorSubject<Hero> = new BehaviorSubject<Hero>(this.defaultHero);
@@ -31,21 +29,86 @@ export class HeroesService {
   private _skills$$: BehaviorSubject<IdName[]> = new BehaviorSubject<IdName[]>(Skills);
   public skills$: Observable<IdName[]> = this._skills$$.asObservable();
 
-  constructor(public dialog: MatDialog) { }
+  private _filterData$$: BehaviorSubject<FilterData> = new BehaviorSubject<FilterData>(this.defaultFilter);
 
-  public getHeroes(): void {
-    this.heroes$.subscribe((items: Hero[]) => {
-      this.heroes = items;
-    })
-    this.filteredHeroes = this.heroes.slice();
-    // this.filteredHeroes$.subscribe((items: Hero[]) => {
-    //   this.filteredHeroes = items;
-    // })
+  constructor(public dialog: MatDialog) {}
+
+  private sendHttpRequest = (method: string, url: string, data: any) => {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open(method, url);
+      xhr.responseType = 'json';
+      if (data) {
+        xhr.setRequestHeader('Content-Type', 'application/json');
+      }
+      xhr.onload = () => {
+        if (xhr.status >= 400) {
+          reject(xhr.response);
+        } else {
+          resolve(xhr.response);
+        }
+      };
+      xhr.onerror = () => {
+        reject(xhr.response);
+      };
+      xhr.send(JSON.stringify(data));
+    });
   }
 
-  public getSkills(): void {
-    this.skills$.subscribe((items: IdName[]) => {
-      this.skills = items;
+  public getHeroes(): void {
+    this.sendHttpRequest('GET', 'http://127.0.0.1:3000/items', {}).then((responseData) => {
+      const heroes = JSON.parse(JSON.stringify(responseData));
+      this._heroes$$.next(heroes);
+      this._filteredHeroes$$.next(heroes);
+    }).catch(err => {
+      console.log(err);
+    })
+  }
+
+  public addHero(hero: Hero): void {
+    const heroes = this._heroes$$.value;
+    this.sendHttpRequest('POST', 'http://127.0.0.1:3000/items', {
+      id: this.genId(heroes),
+      name: hero.name,
+      power: hero.power,
+      skill: hero.skill,
+      level: hero.level
+    }).then((responseData) => {
+      console.log(responseData);
+      heroes.push(JSON.parse(JSON.stringify(responseData)));
+      this._heroes$$.next(heroes);
+      this.filterHeroes();
+    }).catch(err => {
+      console.log(err);
+    })
+  }
+
+  public deleteHero(heroId: number): void {
+    this.sendHttpRequest('DELETE', `http://127.0.0.1:3000/items/${heroId}`, {}).then(responseData => {
+      const heroes = this._heroes$$.value;
+      const heroesWithOutDeletedHero = heroes.filter((hero: Hero) => hero.id !== heroId);
+      this._heroes$$.next(heroesWithOutDeletedHero);
+      this._filteredHeroes$$.next(heroesWithOutDeletedHero);
+    }).catch(err => {
+      console.log(err);
+    })
+  }
+
+  public updateHero(hero: Hero): void {
+    this.sendHttpRequest('PUT', `http://127.0.0.1:3000/items/${hero.id}`, {
+      id: hero.id,
+      name: hero.name,
+      power: hero.power,
+      skill: hero.skill,
+      level: hero.level
+    }).then(responseData => {
+      const heroes = this._heroes$$.value;
+      const foundIndex = heroes.findIndex((hero: Hero) => (hero.id === this._foundHeroId$$.value));
+      heroes.splice(foundIndex, 1, hero);
+      this._heroes$$.next(heroes);
+      this.filterHeroes();
+    }).catch(err => {
+      console.log(err);
     })
   }
 
@@ -53,53 +116,46 @@ export class HeroesService {
     return variable.length + 1;
   }
 
-  public addHero(hero: Hero): void {
-    this._heroes$$.subscribe((items: Hero[]) => {
-      hero.id = this.genId(this.heroes);
-      this.heroes.push(hero);
-    })
-    this.filteredHeroes = this.heroes.slice();
-  }
-
   public addSkill(skill: IdName): void {
-    this._skills$$.subscribe((items: IdName[]) => {
-      skill.id = this.genId(this.skills);
-      this.skills.push(skill);
-    });
-  }
-
-  public updateHero(hero: Hero): void {
-    this._selectedHero$$.next(hero);
-    this._heroes$$.subscribe((items: IdName[]) => {
-      this.heroes.splice(this.foundIdHero - 1, 1, hero);
-    });
-    this.filteredHeroes.splice(this.foundIdHero - 1, 1, hero);
+    const skills = this._skills$$.value;
+    skill.id = this.genId(skills);
+    skills.push(skill);
+    this._skills$$.next(skills);
   }
 
   public setSelectedHero(hero: Hero): void {
     this._selectedHero$$.next(hero);
-    this.foundIdHero = hero.id;
+    this._foundHeroId$$.next(hero.id);
     this.dialog.open(EditHeroesComponent);
   }
 
-  public filterHeroes(variable: FilterData): void {
-     this.filteredHeroes = this.heroes.filter(item =>
-      (!variable.fromLevel || item.level >= variable.fromLevel)
-       && (!variable.toLevel || item.level <= variable.toLevel)
-       && (!variable.name
-        || item.name.toLowerCase().indexOf(variable.name.toLowerCase()) > -1
-        || item.name.toUpperCase().indexOf(variable.name.toUpperCase()) > -1)
-    );
-    this._filteredHeroes$$.next(this.filteredHeroes);
+  public setFilterValue(variable: FilterData): void {
+    this._filterData$$.next(variable);
   }
 
-  // public sortHeroes(variable: FilterData): boolean {
-  //   if (variable.sortLevel) {
-  //     this.heroes.sort((a, b) => a.level - b.level);
-  //     return true;
-  //   } else {
-  //     this.heroes.sort((a,b) => b.level - a.level);
-  //     return false;
-  //   }
-  // }
+  public filterHeroes(): void {
+    const variable = this._filterData$$.value;
+    const heroes = this._heroes$$.value;
+    const filteredHeroes = heroes.filter(item =>
+      ((!variable.fromLevel || item.level >= variable.fromLevel)
+      && (!variable.toLevel || item.level <= variable.toLevel)
+      && (!variable.name
+      || item.name.toLowerCase().indexOf(variable.name.toLowerCase()) > -1
+      || item.name.toUpperCase().indexOf(variable.name.toUpperCase()) > -1)
+      && (!variable.skill.length || (JSON.stringify(variable.skill) === JSON.stringify(item.skill)))
+      ));
+    this.sortHeroes(filteredHeroes);
+  }
+
+  public sortHeroes(filteredHeroes: Hero[]): void {
+    const variable = this._filterData$$.value;
+    let sortedHeroes: Hero[];
+    if (variable.sortLevel) {
+      sortedHeroes = filteredHeroes.sort((a, b) => b.level - a.level);
+    } else {
+      sortedHeroes = filteredHeroes.sort((a,b) => a.id - b.id);
+    }
+    this._filteredHeroes$$.next(sortedHeroes);
+  }
+
 }

@@ -1,14 +1,14 @@
 <form class="add-skills" [formGroup]="addSkillForm">
 
   <div class="field">
-    <mat-label>Добавление способностей:</mat-label>
+    <mat-label class="field-title">Добавление способностей:</mat-label>
     <mat-form-field appearance="outline">
       <input matInput type="text" class="form-control" [formControlName]="HERO_ENUM.SKILL">
     </mat-form-field>
   </div>
 
   <div class="button-field">
-      <button mat-flat-button color="primary" (click)="addSkill(); addSkillForm.reset()">Добавить способность</button>
+      <button mat-flat-button color="primary" (click)="addSkill()">Добавить способность</button>
   </div>
 
 </form>

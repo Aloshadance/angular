@@ -22,7 +22,12 @@
           </div>
         </div>
         <div class="button-field">
-          <button mat-flat-button color="primary" (click)="setSelectedHero(hero)">Редактировать</button>
+          <div class="button-select-field">
+            <button mat-flat-button color="primary" (click)="setSelectedHero(hero)">Редактировать</button>
+          </div>
+          <div class="button-delete-field">
+            <mat-icon aria-hidden="false" aria-label="Delete this hero!" class="delete-field" (click)="deleteHero(hero.id)">delete_outline</mat-icon>
+          </div>
         </div>
       </mat-expansion-panel>
     </div>

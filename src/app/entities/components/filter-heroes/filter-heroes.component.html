@@ -1,38 +1,44 @@
 <form class="filter-heroes" [formGroup]="filterHeroesForm">
-  <div class="field-row">
+  <div class="field-column">
     <div class="field">
-      Уровень героя:
-      <mat-label> от </mat-label>
-      <mat-form-field appearance="outline" class="filter-heroes-level">
-        <input matInput type="number" class="form-control" min="1" placeholder="1" [formControlName]="HERO_ENUM.FROM_LEVEL">
-      </mat-form-field>
-      <mat-label> до </mat-label>
-      <mat-form-field appearance="outline" class="filter-heroes-level">
-        <input matInput type="number" class="form-control" min="1" max="100" placeholder="100" [formControlName]="HERO_ENUM.TO_LEVEL">
-      </mat-form-field>
+      <mat-label class="field-title">Уровень героя:</mat-label>
+      <div class="field-content">
+        <mat-label class="field-level-border"> от </mat-label>
+        <mat-form-field appearance="outline" class="filter-heroes-level">
+          <input matInput type="number" class="form-control" min="1" placeholder="1" [formControlName]="HERO_ENUM.FROM_LEVEL">
+        </mat-form-field>
+        <mat-label class="field-level-border"> до </mat-label>
+        <mat-form-field appearance="outline" class="filter-heroes-level">
+          <input matInput type="number" class="form-control" min="1" max="100" placeholder="100" [formControlName]="HERO_ENUM.TO_LEVEL">
+        </mat-form-field>
+      </div>
     </div>
 
     <div class="field">
-      Способности:
+      <mat-label class="field-title">Поиск по имени:</mat-label>
+      <div class="field-content">
+        <mat-form-field appearance="outline">
+          <input matInput type="text" class="form-control" [formControlName]="HERO_ENUM.NAME">
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+
+  <div class="field-column">
+    <div class="field">
+      <mat-label class="field-title">Способности:</mat-label>
+      <div class="field-content">
       <mat-form-field appearance="outline">
         <mat-select multiple [formControlName]="HERO_ENUM.SKILL">
           <mat-option *ngFor="let skill of skills" [value]="skill">{{skill.name}}</mat-option>
         </mat-select>
       </mat-form-field>
-    </div>
-  </div>
-
-  <div class="field-row">
-    <div class="field">
-      Поиск по имени:
-      <mat-form-field appearance="outline">
-        <input matInput type="text" class="form-control" [formControlName]="HERO_ENUM.NAME">
-      </mat-form-field>
+      </div>
     </div>
 
     <div class="field">
-      Сортировать по возрастанию уровня:
-      <mat-checkbox class="example-margin form-control" color="primary" [formControlName]="HERO_ENUM.SORT_LEVEL"></mat-checkbox>
+      <mat-label class="field-title">Сортировать по возрастанию уровня:</mat-label>
+      <mat-checkbox class="example-margin form-control sort-element" color="primary" [formControlName]="HERO_ENUM.SORT_LEVEL"></mat-checkbox>
     </div>
   </div>
 

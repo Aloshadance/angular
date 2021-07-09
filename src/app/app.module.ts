@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AddHeroesComponent } from './entities/components/add-heroes/add-heroes.component';
@@ -21,9 +20,6 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatCardModule} from "@angular/material/card";
 import {HeroesService} from "./entities/services/heroes.service";
 import {MatDialogModule} from "@angular/material/dialog";
-import { HttpClientModule } from '@angular/common/http';
-import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
-import { InMemoryDataService} from "./entities/services/in-memory-data.service";
 
 @NgModule({
   declarations: [
@@ -37,7 +33,6 @@ import { InMemoryDataService} from "./entities/services/in-memory-data.service";
     imports: [
         BrowserModule,
         FormsModule,
-        AppRoutingModule,
         MatFormFieldModule,
         BrowserAnimationsModule,
         MatSelectModule,

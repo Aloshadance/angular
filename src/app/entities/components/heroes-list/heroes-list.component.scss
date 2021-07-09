@@ -1,5 +1,4 @@
 .heroes-list {
-  width: 100%;
   background-color: azure;
   margin-top: 10px;
   overflow-y: auto;
@@ -20,7 +19,9 @@
 .button-field {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   padding: 0 10px 10px 10px;
+  margin-top: 10px;
 }
 .mat-expansion-panel-header-description {
   flex-grow: 0.2;
@@ -35,9 +36,6 @@
 .all-heroes {
   height: 400px;
 }
-.button-field {
-  margin-top: 10px;
-}
 .field-power {
   margin-bottom: 5px;
 }
@@ -45,4 +43,7 @@
   display: flex;
   align-items: center;
 }
-
+.button-delete-field {
+  cursor: pointer;
+  padding: 0 10px 0 30px;
+}

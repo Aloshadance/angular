@@ -1,26 +1,36 @@
-:host {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  align-items: flex-start;
-}
-.field-row {
+.filter-heroes {
+  background-color: azure;
+  padding: 10px;
   display: flex;
   flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 40px;
-}
-.field:last-child {
-  padding: 0 10px;
-}
-.filter-heroes {
-  width: 100%;
-  background-color: azure;
+  justify-content: space-around;
 }
 .example-margin {
   margin: 0 10px;
+  display: flex;
+  align-items: center;
+}
+.field-column {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
 }
 .filter-heroes-level {
-  width: 100px;
+  max-width: 100px;
+}
+.field-title {
+  display: flex;
+  padding: 1.34375em;
+}
+.field-content {
+  display: flex;
+}
+.field {
+  display: flex;
+  flex-direction: row;
+}
+.field-level-border {
+  display: flex;
+  align-items: center;
+  padding: 0 5px 1.34375em 5px;
 }

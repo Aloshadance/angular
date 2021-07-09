@@ -31,15 +31,15 @@ export class FilterHeroesComponent implements OnInit {
   }
 
   public getSkills(): void {
-    this._service.getSkills();
     this._service.skills$.subscribe((items: IdName[]) => {
       this.skills = items;
-    })
+    });
   }
 
   public filterHeroes(): void {
     this.filterHeroesForm.valueChanges.subscribe(value => {
-      this._service.filterHeroes(value);
+      this._service.setFilterValue(value);
+      this._service.filterHeroes();
     });
   }
 
