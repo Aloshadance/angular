@@ -73,7 +73,6 @@ export class HeroesService {
       skill: hero.skill,
       level: hero.level
     }).then((responseData) => {
-      console.log(responseData);
       heroes.push(JSON.parse(JSON.stringify(responseData)));
       this._heroes$$.next(heroes);
       this.filterHeroes();

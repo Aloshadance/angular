@@ -11,7 +11,7 @@ import {HeroesDetailEnum} from "../../enums/heroes-detail.enum";
   styleUrls: ['./edit-heroes.component.scss']
 })
 export class EditHeroesComponent implements OnInit {
-  public hero: Hero = {id: 0, skill: [], name: '', level: 0, power: 0};
+  public hero: Hero = {name: '', power: 0, skill: [], level: 0, id: 0};
   public skills: IdName[] = [];
 
   constructor(private _service: HeroesService) {}
@@ -37,8 +37,8 @@ export class EditHeroesComponent implements OnInit {
   public getHero(): void {
     this._service.selectedHero$.subscribe((item: Hero) => {
       this.hero = item;
+      this.editHeroForm.patchValue(this.hero);
     });
-    this.editHeroForm.patchValue(this.hero);
   }
 
   public updateHero(): void {

@@ -18,17 +18,17 @@ export class HeroesListComponent implements OnInit {
   ngOnInit() {
     this.getHeroes();
     this.getSkills();
-    this._service.getHeroes();
-    this._service.getSkills();
   }
 
   public getHeroes(): void {
+    this._service.getHeroes();
     this._service.filteredHeroes$.subscribe((items: Hero[]) => {
       this.heroes = items;
     });
   }
 
   public getSkills(): void {
+    this._service.getSkills();
     this._service.skills$.subscribe((items: IdName[]) => {
       this.skills = items;
     });

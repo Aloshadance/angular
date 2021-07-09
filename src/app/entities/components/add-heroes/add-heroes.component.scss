@@ -21,8 +21,19 @@
 }
 .add-heroes {
   width: 100%;
-  background-color: azure;
+  background-color: #A3B5BF;
+  border: 1px solid #333333;
+  border-radius: 10px;
+  font-family: Cambria, Georgia, serif;
+  font-size: 16px;
 }
 .field-title {
   padding-bottom: 1.34375em;
+}
+.mat-flat-button {
+  background-color: #105B74;
+  color: white;
+}
+.mat-form-field-label .mat-focused {
+  background-color: #105B74;
 }

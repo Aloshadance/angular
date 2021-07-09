@@ -22,8 +22,14 @@
 .add-skills {
   margin-top: 20px;
   width: 100%;
-  background-color: azure;
+  background-color: #A3B5BF;
+  border: 1px solid #333333;
+  border-radius: 10px;
 }
 .field-title {
   padding-bottom: 1.34375em;
+}
+.mat-flat-button {
+  background-color: #105B74;
+  color: white;
 }

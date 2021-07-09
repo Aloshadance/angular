@@ -1,5 +1,7 @@
 .filter-heroes {
-  background-color: azure;
+  background-color: #A3B5BF;
+  border: 1px solid #333333;
+  border-radius: 10px;
   padding: 10px;
   display: flex;
   flex-direction: row;
@@ -28,6 +30,7 @@
 .field {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
 }
 .field-level-border {
   display: flex;
