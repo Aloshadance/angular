@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Hero } from "../interfaces/hero";
 import { BehaviorSubject, Observable } from "rxjs";
 import { IdName } from "../interfaces/id-name.interface";
-import {Skills} from "../mocks/skills.mock";
 import {EditHeroesComponent} from "../components/edit-heroes/edit-heroes.component";
 import {MatDialog} from "@angular/material/dialog";
 import {FilterData} from "../interfaces/filter-data";
@@ -16,7 +15,7 @@ export class HeroesService {
   public foundHeroId$: Observable<number> = this._foundHeroId$$.asObservable();
 
   private defaultHero = {id: 0, name: '', skill: [], power: 0, level: 0};
-  private defaultFilter = {name: '', fromLevel: 0, toLevel: 0, sortLevel: false, skill: []}
+  private defaultFilter = {name: '', fromLevel: 0, toLevel: 0, sortLevel: false, skill: []};
 
   private _heroes$$: BehaviorSubject<Hero[]> = new BehaviorSubject<Hero[]>([]);
 
@@ -26,7 +25,7 @@ export class HeroesService {
   private _selectedHero$$: BehaviorSubject<Hero> = new BehaviorSubject<Hero>(this.defaultHero);
   public selectedHero$: Observable<Hero> = this._selectedHero$$.asObservable();
 
-  private _skills$$: BehaviorSubject<IdName[]> = new BehaviorSubject<IdName[]>(Skills);
+  private _skills$$: BehaviorSubject<IdName[]> = new BehaviorSubject<IdName[]>([]);
   public skills$: Observable<IdName[]> = this._skills$$.asObservable();
 
   private _filterData$$: BehaviorSubject<FilterData> = new BehaviorSubject<FilterData>(this.defaultFilter);
@@ -56,7 +55,7 @@ export class HeroesService {
   }
 
   public getHeroes(): void {
-    this.sendHttpRequest('GET', 'http://127.0.0.1:3000/items', {}).then((responseData) => {
+    this.sendHttpRequest('GET', 'http://127.0.0.1:3000/heroes', {}).then((responseData) => {
       const heroes = JSON.parse(JSON.stringify(responseData));
       this._heroes$$.next(heroes);
       this._filteredHeroes$$.next(heroes);
@@ -67,7 +66,7 @@ export class HeroesService {
 
   public addHero(hero: Hero): void {
     const heroes = this._heroes$$.value;
-    this.sendHttpRequest('POST', 'http://127.0.0.1:3000/items', {
+    this.sendHttpRequest('POST', 'http://127.0.0.1:3000/heroes', {
       id: this.genId(heroes),
       name: hero.name,
       power: hero.power,
@@ -84,7 +83,7 @@ export class HeroesService {
   }
 
   public deleteHero(heroId: number): void {
-    this.sendHttpRequest('DELETE', `http://127.0.0.1:3000/items/${heroId}`, {}).then(responseData => {
+    this.sendHttpRequest('DELETE', `http://127.0.0.1:3000/heroes/${heroId}`, {}).then(responseData => {
       const heroes = this._heroes$$.value;
       const heroesWithOutDeletedHero = heroes.filter((hero: Hero) => hero.id !== heroId);
       this._heroes$$.next(heroesWithOutDeletedHero);
@@ -95,7 +94,7 @@ export class HeroesService {
   }
 
   public updateHero(hero: Hero): void {
-    this.sendHttpRequest('PUT', `http://127.0.0.1:3000/items/${hero.id}`, {
+    this.sendHttpRequest('PUT', `http://127.0.0.1:3000/heroes/${hero.id}`, {
       id: hero.id,
       name: hero.name,
       power: hero.power,
@@ -112,15 +111,30 @@ export class HeroesService {
     })
   }
 
-  public genId(variable: any): number {
-    return variable.length + 1;
+  public getSkills(): void {
+    this.sendHttpRequest('GET', 'http://127.0.0.1:3000/skills', {}).then((responseData) => {
+      const skills = JSON.parse(JSON.stringify(responseData));
+      this._skills$$.next(skills);
+    }).catch(err => {
+      console.log(err);
+    })
   }
 
   public addSkill(skill: IdName): void {
     const skills = this._skills$$.value;
-    skill.id = this.genId(skills);
-    skills.push(skill);
-    this._skills$$.next(skills);
+    this.sendHttpRequest('POST', 'http://127.0.0.1:3000/skills', {
+      id: this.genId(skills),
+      name: skill.name
+    }).then((responseData) => {
+      skills.push(JSON.parse(JSON.stringify(responseData)));
+      this._skills$$.next(skills);
+    }).catch(err => {
+      console.log(err);
+    })
+  }
+
+  public genId(variable: any): number {
+    return variable.length + 1;
   }
 
   public setSelectedHero(hero: Hero): void {

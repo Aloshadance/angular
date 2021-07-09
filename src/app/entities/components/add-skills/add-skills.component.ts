@@ -17,7 +17,7 @@ export class AddSkillsComponent implements OnInit {
 
   public HERO_ENUM: typeof HeroesDetailEnum = HeroesDetailEnum;
   public addSkillForm: FormGroup = new FormGroup( {
-    [HeroesDetailEnum.SKILL]: new FormControl('', Validators.required)
+    [HeroesDetailEnum.NAME]: new FormControl('', Validators.required)
 });
   ngOnInit(): void {
     this.getSkills();
@@ -31,9 +31,7 @@ export class AddSkillsComponent implements OnInit {
 
   public addSkill(): void {
     if ((this.addSkillForm.valid) && (!this.skills.find(item => item.name === this.addSkillForm.get('skill')?.value))) {
-      this._service.addSkill(
-        {id: this.skills.length + 1,
-             name: this.addSkillForm.get('skill')?.value});
+      this._service.addSkill(this.addSkillForm.value);
     } else {
       alert('Заполните поле добавления способности иначе!')
     }

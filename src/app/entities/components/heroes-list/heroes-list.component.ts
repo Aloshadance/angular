@@ -19,6 +19,7 @@ export class HeroesListComponent implements OnInit {
     this.getHeroes();
     this.getSkills();
     this._service.getHeroes();
+    this._service.getSkills();
   }
 
   public getHeroes(): void {
